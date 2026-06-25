@@ -1,51 +1,42 @@
-# Qdrant is installed
+Qdrant is running and ready. There is no setup wizard: get your API key below, then point your apps
+or your code at Qdrant whenever you want to use it. Opening the dashboard is optional.
 
-## Get your API key
+### 1. Get your API key
 
-Qdrant requires an API key on every request. This package generated one admin key and one
-read-only key on first start. To see them, open a Terminal for this app in the Cloudron
-dashboard (or run `cloudron exec`) and read the keys file:
+Open a Terminal for this app (the `>_` button at the top of this page) and run:
 
     cat /app/data/.secrets/keys.env
 
-Keep the admin key secret: it grants full read and write access. The read-only key grants read
-access only. Either can be sent as an `api-key` header or as an `Authorization: Bearer` token.
+It prints two keys: `QDRANT_ADMIN_API_KEY` (full access) and `QDRANT_READONLY_API_KEY` (read only).
+You give one of these keys to anything that connects to Qdrant.
 
-## Dashboard
+### 2. Open the dashboard (optional)
 
-<sso>
-Open $CLOUDRON-APP-ORIGIN/dashboard and sign in with your Cloudron account. The dashboard is on
-your primary domain behind Cloudron login, so only your Cloudron users can reach it. After
-signing in, paste the admin key into the dashboard's API key field to manage collections.
-</sso>
-<nosso>
-Open $CLOUDRON-APP-ORIGIN/dashboard. Single sign-on is not enabled for this install, so the
-dashboard is reachable directly. Paste the admin key into the dashboard's API key field to manage
-collections.
-</nosso>
+Open $CLOUDRON-APP-ORIGIN/dashboard, sign in with your Cloudron account, and paste the admin key into
+the API key field to browse and manage your collections.
 
-## Connecting clients (REST and gRPC)
+## How other apps and code connect to Qdrant
 
-The data plane is not behind Cloudron login, because automated clients cannot complete an
-interactive sign-in. It is protected by the API key instead.
+You do not need to run anything here to finish setup; Qdrant is ready. This just explains how to
+reach it from elsewhere when you want to use it.
 
-- REST, on your app domain:
+- **From another Cloudron app** (n8n, OpenWebUI, AnythingLLM, and so on): in that other app's own
+  settings, set the Qdrant URL to $CLOUDRON-APP-ORIGIN and paste an API key. This is configured in
+  the other app, not here. See `docs/INTEGRATIONS.md` for per-app recipes.
+- **From your own code or scripts:** connect over REST at $CLOUDRON-APP-ORIGIN with the key. For
+  high-throughput Rust clients (`rig-qdrant`), use gRPC at the host and port shown under this app's
+  Location settings (it is plain TCP, not TLS-terminated; see the README security section).
 
-      curl $CLOUDRON-APP-ORIGIN/collections -H "api-key: <admin-key>"
+Optional: to confirm the key works, run this **from your own computer** (for example a terminal on
+your laptop, not this app's Terminal). It returns a JSON list of your collections:
 
-- gRPC, on the host and port shown for this app's "Qdrant gRPC API" port (under the app's
-  Location settings). This is what the Rust `rig-qdrant` client uses. The gRPC port is plain TCP
-  and is not TLS-terminated by Cloudron; see the README security section.
+    curl $CLOUDRON-APP-ORIGIN/collections -H "api-key: PASTE-ADMIN-KEY-HERE"
 
-## Scoped tokens (JWT)
+### More
 
-JWT and role-based access control are enabled. From the dashboard "Access Tokens" panel you can
-mint read-only or per-collection tokens, signed by the admin key, to hand to integrators.
-Rotating the admin key revokes every issued token.
-
-## Memory and large collections
-
-The default memory limit is 2 GB. Qdrant is configured to reject writes, while staying alive and
-serving reads, when it approaches the limit, rather than being killed into a restart loop. For
-larger collections, raise the memory limit in the app's Resources settings, store vectors on
-disk, or use TurboQuant quantization. See the README and docs/INTEGRATIONS.md.
+- **Scoped tokens:** JWT and RBAC are on. Mint read-only or per-collection tokens in the dashboard's
+  Access Tokens panel; rotating the admin key revokes them all.
+- **Memory:** the limit is 2 GB. Qdrant rejects writes (while still serving reads) near the limit
+  rather than being killed. For large collections, raise the limit, store vectors on disk, or use
+  TurboQuant.
+- Full topology, security, and integration recipes are in the README and `docs/INTEGRATIONS.md`.

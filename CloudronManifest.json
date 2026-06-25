@@ -38,10 +38,10 @@
   "postInstallMessage": "file://POSTINSTALL.md",
   "checklist": {
     "apikey": {
-      "message": "Retrieve your admin API key: open a Terminal for this app (or `cloudron exec`) and run `cat /app/data/.secrets/keys.env`. You will paste the admin key into the dashboard and use it for client connections. A separate read-only key is in the same file."
+      "message": "Get your admin API key: open a Terminal for this app (the `>_` button) and run `cat /app/data/.secrets/keys.env`. Paste the admin key into the dashboard and use it for clients; a read-only key is in the same file."
     },
     "dashboard": {
-      "message": "Open the dashboard at `/dashboard`, sign in with your Cloudron account, then paste the admin API key into the dashboard's API key field.",
+      "message": "Open the dashboard at `/dashboard`, sign in with Cloudron, and paste the admin key into the dashboard's API key field.",
       "sso": true
     }
   },
