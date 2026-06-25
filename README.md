@@ -147,6 +147,12 @@ cloudron install \
 The image is pinned by digest in `CloudronVersions.json`, so every install pulls the exact build
 that was published.
 
+This community versions-url channel requires **Cloudron 9.1.0 or newer**: the channel mandates the
+`iconUrl` manifest field, and `iconUrl` requires box 9.1.0, so a versions-url manifest cannot target
+a lower floor (omitting `iconUrl` makes versions-url validation fail). On a box below 9.1.0, install
+by building from source instead (next section), which works on Cloudron 8.3 and up and takes its icon
+from the `file://logo.png`.
+
 ## Build from source
 
 To build the image yourself instead of pulling the published one, clone this repository and run
