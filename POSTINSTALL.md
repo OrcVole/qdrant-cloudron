@@ -1,37 +1,26 @@
-> **Qdrant is running and ready.** There is no setup wizard. Get your API key, then point your apps
-> or your code at it whenever you want. Opening the dashboard is optional.
->
-> ### 1. Get your API key
->
-> Open a Terminal for this app (the `>_` button above) and run:
->
-> ```
-> cat /app/data/.secrets/keys.env
-> ```
->
-> It prints `QDRANT_ADMIN_API_KEY` (full access) and `QDRANT_READONLY_API_KEY` (read only). You give
-> one of these keys to anything that connects to Qdrant.
->
-> ### 2. Open the dashboard (optional)
->
-> Open $CLOUDRON-APP-ORIGIN/dashboard, sign in with your Cloudron account, and paste the admin key
-> into the API key field to browse and manage collections.
->
-> ### Connecting apps and code (reference, not a step)
->
-> You do not run anything here to finish setup. To use Qdrant from another Cloudron app (n8n,
-> OpenWebUI, AnythingLLM), set its Qdrant URL to $CLOUDRON-APP-ORIGIN and paste a key in that app's
-> own settings. From your own code, use REST at $CLOUDRON-APP-ORIGIN, or gRPC at the host and port
-> shown under this app's Location settings (plain TCP, for clients like Rust `rig-qdrant`). To check
-> the key works, run this from your own computer:
->
-> ```
-> curl $CLOUDRON-APP-ORIGIN/collections -H "api-key: PASTE-ADMIN-KEY"
-> ```
->
-> ### More
->
-> JWT and RBAC are on: mint scoped, read-only or per-collection tokens in the dashboard's Access
-> Tokens panel. The memory limit is 2 GB; Qdrant rejects writes near the limit instead of being
-> killed. Full topology, security, and integration recipes are in the README and
-> `docs/INTEGRATIONS.md`.
+### Qdrant is running and ready
+
+No setup wizard. Get your API key below, then point your apps or your code at Qdrant whenever you
+want. The dashboard is optional.
+
+**Get your API key.** Open this app's Terminal (the `>_` button above) and run
+`cat /app/data/.secrets/keys.env`. It prints `QDRANT_ADMIN_API_KEY` (full access — use only for
+writing/creating) and `QDRANT_READONLY_API_KEY` (read only — prefer this for most connections).
+
+**Open the dashboard (optional).** Go to $CLOUDRON-APP-ORIGIN/dashboard, sign in with your Cloudron
+account, and paste the admin key into the API-key field.
+
+**Connect another Cloudron app** (n8n, OpenWebUI, AnythingLLM): in that app's own settings, set its
+Qdrant URL to $CLOUDRON-APP-ORIGIN and paste a key. See `docs/INTEGRATIONS.md` for per-app recipes.
+
+**Connect your own code:** REST at $CLOUDRON-APP-ORIGIN, or gRPC at the host and port under this
+app's Location settings (for Rust `rig-qdrant`; plain TCP, see the README security section).
+
+**Test from your own computer:** `curl $CLOUDRON-APP-ORIGIN/collections -H "api-key: PASTE-READONLY-KEY-HERE"`.
+Use the read-only key for anything that only reads; use the admin key only for apps that create
+collections or write points.
+
+**Good to know.** JWT and RBAC are on — mint scoped tokens in the dashboard's Access Tokens panel
+(rotating the admin key revokes them all). The memory limit is 2 GB; Qdrant rejects writes near the
+limit rather than being killed. Full topology, security, and integration recipes are in the README
+and `docs/INTEGRATIONS.md`.
