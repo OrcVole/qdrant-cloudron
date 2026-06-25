@@ -1,16 +1,16 @@
 {
   "stable": true,
   "versions": {
-    "1.0.0": {
+    "1.0.1": {
       "manifest": {
         "id": "tech.qdrant.cloudronapp",
         "title": "Qdrant",
         "author": "OrcVole",
         "tagline": "High-performance vector database for AI and search",
         "description": "Qdrant is a high-performance, open-source vector database and similarity-search engine written\nin Rust. It stores high-dimensional vectors together with JSON payloads and serves fast\nnearest-neighbour search over REST and gRPC, which makes it a building block for\nretrieval-augmented generation, semantic search, recommendations, and other AI workloads.\n\nThis package runs Qdrant on Cloudron with a secure, two-surface topology on a single domain:\n\n- The web dashboard (served under /dashboard) is placed behind Cloudron login, so only your\n  Cloudron users can open the management UI.\n- The REST and gRPC data plane stays in front of Cloudron login and is protected by Qdrant's own\n  API key, so programmatic clients and sibling apps authenticate with a key rather than being\n  redirected to an interactive sign-in page.\n\nQdrant is insecure by default: its API is open to anyone who can reach it. This package closes\nthat gap. It generates a strong admin key and a separate read-only key on first start, enables\nJWT and role-based access control so you can mint scoped tokens, disables telemetry, refuses\nsnapshot recovery from arbitrary URLs, and configures Qdrant to reject writes rather than be\nkilled when it approaches its memory limit.\n\nAll persistent state lives under the application data directory, so Cloudron's backup covers it.\n\nThis is a community package. It tracks upstream Qdrant releases and keeps the upstream binary\nunmodified. Qdrant and the Qdrant name and logo are trademarks of their respective owner. This\npackage is community-maintained and is not affiliated with or endorsed by the Qdrant project.\n",
-        "changelog": "# Changelog\n\n[1.0.0]\n- Initial release. Packages Qdrant v1.18.2 on cloudron/base:5.0.0.\n- Two-surface topology on a single domain: the dashboard (/dashboard) behind the Cloudron\n  proxyAuth addon, the REST and gRPC data plane in front of it and protected by Qdrant's API\n  key.\n- Generates a strong admin key and a separate read-only key on first start. Enables JWT and\n  role-based access control for scoped tokens.\n- Security hardening: telemetry disabled, snapshot recovery from remote URLs refused.\n- Memory protection: strict-mode resident-memory guard (reject writes, stay alive) together with\n  on-disk payload, so the service degrades rather than being killed when memory runs low.\n- gRPC exposed on a Cloudron TCP port for high-throughput clients such as rig-qdrant.\n- All state under /app/data, covered by Cloudron backup. An optional in-container snapshot cron\n  (off by default) writes an extra consistent artifact into the backup.\n",
+        "changelog": "# Changelog\n\n[1.0.1]\n- Set minBoxVersion to 9.1.0. The community versions-url install channel requires the iconUrl\n  manifest field, and iconUrl requires Cloudron 9.1.0, so there is no 8.3.0-compatible\n  versions-url manifest. Boxes below 9.1.0 can still install by building on the server (README).\n- Flatten the post-install Admin notes (Cloudron renders the notes pane as inline markdown, with\n  no blockquote cards or callouts) and default the examples to the read-only key.\n\n[1.0.0]\n- Initial release. Packages Qdrant v1.18.2 on cloudron/base:5.0.0.\n- Two-surface topology on a single domain: the dashboard (/dashboard) behind the Cloudron\n  proxyAuth addon, the REST and gRPC data plane in front of it and protected by Qdrant's API key.\n- Generates a strong admin key and a separate read-only key on first start; JWT and RBAC enabled.\n- Security hardening: telemetry disabled, snapshot recovery from remote URLs refused.\n- Memory protection: strict-mode resident-memory guard plus on-disk payload.\n- gRPC exposed on a Cloudron TCP port for high-throughput clients such as rig-qdrant.\n- All state under /app/data, covered by Cloudron backup; optional in-container snapshot cron.\n",
         "icon": "file://logo.png",
-        "version": "1.0.0",
+        "version": "1.0.1",
         "upstreamVersion": "1.18.2",
         "healthCheckPath": "/healthz",
         "httpPort": 6333,
@@ -63,11 +63,12 @@
         "packagerName": "OrcVole",
         "packagerUrl": "https://github.com/OrcVole/qdrant-cloudron",
         "manifestVersion": 2,
-        "minBoxVersion": "8.3.0",
-        "dockerImage": "ghcr.io/orcvole/qdrant-cloudron@sha256:0d136e2d037cef84b124e7d27c4e0e85d0a4bcf5edae7275261a3ce5d905dc51"
+        "minBoxVersion": "9.1.0",
+        "dockerImage": "ghcr.io/orcvole/qdrant-cloudron@sha256:0d136e2d037cef84b124e7d27c4e0e85d0a4bcf5edae7275261a3ce5d905dc51",
+        "iconUrl": "https://raw.githubusercontent.com/OrcVole/qdrant-cloudron/main/logo.png"
       },
-      "creationDate": "Thu, 25 Jun 2026 16:40:30 GMT",
-      "ts": "Thu, 25 Jun 2026 16:40:30 GMT",
+      "creationDate": "Thu, 25 Jun 2026 16:59:27 GMT",
+      "ts": "Thu, 25 Jun 2026 16:59:27 GMT",
       "publishState": "published"
     }
   }
