@@ -64,11 +64,11 @@
         "packagerName": "OrcVole",
         "packagerUrl": "https://github.com/OrcVole/qdrant-cloudron",
         "manifestVersion": 2,
-        "minBoxVersion": "8.3.0",
+        "minBoxVersion": "9.1.0",
         "dockerImage": "ghcr.io/orcvole/qdrant-cloudron@sha256:0d136e2d037cef84b124e7d27c4e0e85d0a4bcf5edae7275261a3ce5d905dc51"
       },
-      "creationDate": "Thu, 25 Jun 2026 15:06:06 GMT",
-      "ts": "Thu, 25 Jun 2026 15:06:06 GMT",
+      "creationDate": "Thu, 25 Jun 2026 15:38:49 GMT",
+      "ts": "Thu, 25 Jun 2026 15:38:49 GMT",
       "publishState": "published"
     }
   }
