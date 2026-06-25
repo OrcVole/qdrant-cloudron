@@ -39,7 +39,7 @@
         "memoryLimit": 2147483648,
         "configurePath": "/dashboard",
         "optionalSso": true,
-        "postInstallMessage": "> **Qdrant is running and ready.** There is no setup wizard. Get your API key, then point your apps\n> or your code at it whenever you want. Opening the dashboard is optional.\n>\n> ### 1. Get your API key\n>\n> Open a Terminal for this app (the `>_` button above) and run:\n>\n> ```\n> cat /app/data/.secrets/keys.env\n> ```\n>\n> It prints `QDRANT_ADMIN_API_KEY` (full access) and `QDRANT_READONLY_API_KEY` (read only). You give\n> one of these keys to anything that connects to Qdrant.\n>\n> ### 2. Open the dashboard (optional)\n>\n> Open $CLOUDRON-APP-ORIGIN/dashboard, sign in with your Cloudron account, and paste the admin key\n> into the API key field to browse and manage collections.\n>\n> ### Connecting apps and code (reference, not a step)\n>\n> You do not run anything here to finish setup. To use Qdrant from another Cloudron app (n8n,\n> OpenWebUI, AnythingLLM), set its Qdrant URL to $CLOUDRON-APP-ORIGIN and paste a key in that app's\n> own settings. From your own code, use REST at $CLOUDRON-APP-ORIGIN, or gRPC at the host and port\n> shown under this app's Location settings (plain TCP, for clients like Rust `rig-qdrant`). To check\n> the key works, run this from your own computer:\n>\n> ```\n> curl $CLOUDRON-APP-ORIGIN/collections -H \"api-key: PASTE-ADMIN-KEY\"\n> ```\n>\n> ### More\n>\n> JWT and RBAC are on: mint scoped, read-only or per-collection tokens in the dashboard's Access\n> Tokens panel. The memory limit is 2 GB; Qdrant rejects writes near the limit instead of being\n> killed. Full topology, security, and integration recipes are in the README and\n> `docs/INTEGRATIONS.md`.\n",
+        "postInstallMessage": "### Qdrant is running and ready\n\nNo setup wizard. Get your API key below, then point your apps or your code at Qdrant whenever you\nwant. The dashboard is optional.\n\n**Get your API key.** Open this app's Terminal (the `>_` button above) and run\n`cat /app/data/.secrets/keys.env`. It prints `QDRANT_ADMIN_API_KEY` (full access — use only for\nwriting/creating) and `QDRANT_READONLY_API_KEY` (read only — prefer this for most connections).\n\n**Open the dashboard (optional).** Go to $CLOUDRON-APP-ORIGIN/dashboard, sign in with your Cloudron\naccount, and paste the admin key into the API-key field.\n\n**Connect another Cloudron app** (n8n, OpenWebUI, AnythingLLM): in that app's own settings, set its\nQdrant URL to $CLOUDRON-APP-ORIGIN and paste a key. See `docs/INTEGRATIONS.md` for per-app recipes.\n\n**Connect your own code:** REST at $CLOUDRON-APP-ORIGIN, or gRPC at the host and port under this\napp's Location settings (for Rust `rig-qdrant`; plain TCP, see the README security section).\n\n**Test from your own computer:** `curl $CLOUDRON-APP-ORIGIN/collections -H \"api-key: PASTE-READONLY-KEY-HERE\"`.\nUse the read-only key for anything that only reads; use the admin key only for apps that create\ncollections or write points.\n\n**Good to know.** JWT and RBAC are on — mint scoped tokens in the dashboard's Access Tokens panel\n(rotating the admin key revokes them all). The memory limit is 2 GB; Qdrant rejects writes near the\nlimit rather than being killed. Full topology, security, and integration recipes are in the README\nand `docs/INTEGRATIONS.md`.\n",
         "checklist": {
           "apikey": {
             "message": "Get your admin API key: open a Terminal for this app (the `>_` button) and run `cat /app/data/.secrets/keys.env`. Paste the admin key into the dashboard and use it for clients; a read-only key is in the same file."
@@ -60,15 +60,14 @@
         "website": "https://github.com/OrcVole/qdrant-cloudron",
         "documentationUrl": "https://github.com/OrcVole/qdrant-cloudron",
         "contactEmail": "OrcVole@users.noreply.github.com",
-        "iconUrl": "https://raw.githubusercontent.com/OrcVole/qdrant-cloudron/main/logo.png",
         "packagerName": "OrcVole",
         "packagerUrl": "https://github.com/OrcVole/qdrant-cloudron",
         "manifestVersion": 2,
-        "minBoxVersion": "9.1.0",
+        "minBoxVersion": "8.3.0",
         "dockerImage": "ghcr.io/orcvole/qdrant-cloudron@sha256:0d136e2d037cef84b124e7d27c4e0e85d0a4bcf5edae7275261a3ce5d905dc51"
       },
-      "creationDate": "Thu, 25 Jun 2026 15:44:22 GMT",
-      "ts": "Thu, 25 Jun 2026 15:44:22 GMT",
+      "creationDate": "Thu, 25 Jun 2026 16:40:30 GMT",
+      "ts": "Thu, 25 Jun 2026 16:40:30 GMT",
       "publishState": "published"
     }
   }
