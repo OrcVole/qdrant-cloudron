@@ -1,0 +1,39 @@
+# Expose this Qdrant package to agents as MCP tools, through agentgateway.
+#
+# agentgateway runs the official mcp-server-qdrant as a stdio MCP backend (using uvx, which the
+# agentgateway package bundles). The MCP server connects to this Qdrant app over its public REST
+# domain with the API key. Add this to the agentgateway data-plane config. Never point the Cloudron
+# OAuth proxy at the data plane.
+#
+# Verify the current mcp-server-qdrant package name and environment variables against its README
+# before relying on this; that project's options change. QDRANT_API_KEY is injected from the
+# environment, not written into the file.
+
+binds:
+  - port: 3000
+    listeners:
+      - routes:
+          - policies:
+              cors:
+                allowOrigins: ["*"]
+                allowHeaders: [mcp-protocol-version, content-type, cache-control]
+                exposeHeaders: ["Mcp-Session-Id"]
+            backends:
+              - mcp:
+                  targets:
+                    - name: qdrant
+                      stdio:
+                        cmd: uvx
+                        args: ["mcp-server-qdrant"]
+                        env:
+                          QDRANT_URL: "https://qdrant.example.com"   # this Qdrant app's domain
+                          QDRANT_API_KEY: "$QDRANT_API_KEY"          # set in the app environment
+                          COLLECTION_NAME: "knowledge"
+                          # mcp-server-qdrant embeds with fastembed by default (a Rust-friendly
+                          # ONNX runtime). To keep the stack Python-free end to end, embed with a
+                          # Rust service (TEI or fastembed-rs) and write vectors through the REST or
+                          # gRPC API instead. See docs/FOLLOWON-TEI.md.
+
+# Test from a client once configured:
+#   npx @modelcontextprotocol/inspector
+#   connect to https://<agentgateway-data-plane>/mcp and list and call the Qdrant tools.

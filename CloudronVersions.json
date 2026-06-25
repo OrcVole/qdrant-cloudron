@@ -1,0 +1,75 @@
+{
+  "stable": true,
+  "versions": {
+    "1.0.0": {
+      "manifest": {
+        "id": "tech.qdrant.cloudronapp",
+        "title": "Qdrant",
+        "author": "OrcVole",
+        "tagline": "High-performance vector database for AI and search",
+        "description": "Qdrant is a high-performance, open-source vector database and similarity-search engine written\nin Rust. It stores high-dimensional vectors together with JSON payloads and serves fast\nnearest-neighbour search over REST and gRPC, which makes it a building block for\nretrieval-augmented generation, semantic search, recommendations, and other AI workloads.\n\nThis package runs Qdrant on Cloudron with a secure, two-surface topology on a single domain:\n\n- The web dashboard (served under /dashboard) is placed behind Cloudron login, so only your\n  Cloudron users can open the management UI.\n- The REST and gRPC data plane stays in front of Cloudron login and is protected by Qdrant's own\n  API key, so programmatic clients and sibling apps authenticate with a key rather than being\n  redirected to an interactive sign-in page.\n\nQdrant is insecure by default: its API is open to anyone who can reach it. This package closes\nthat gap. It generates a strong admin key and a separate read-only key on first start, enables\nJWT and role-based access control so you can mint scoped tokens, disables telemetry, refuses\nsnapshot recovery from arbitrary URLs, and configures Qdrant to reject writes rather than be\nkilled when it approaches its memory limit.\n\nAll persistent state lives under the application data directory, so Cloudron's backup covers it.\n\nThis is a community package. It tracks upstream Qdrant releases and keeps the upstream binary\nunmodified. Qdrant and the Qdrant name and logo are trademarks of their respective owner. This\npackage is community-maintained and is not affiliated with or endorsed by the Qdrant project.\n",
+        "changelog": "# Changelog\n\n[1.0.0]\n- Initial release. Packages Qdrant v1.18.2 on cloudron/base:5.0.0.\n- Two-surface topology on a single domain: the dashboard (/dashboard) behind the Cloudron\n  proxyAuth addon, the REST and gRPC data plane in front of it and protected by Qdrant's API\n  key.\n- Generates a strong admin key and a separate read-only key on first start. Enables JWT and\n  role-based access control for scoped tokens.\n- Security hardening: telemetry disabled, snapshot recovery from remote URLs refused.\n- Memory protection: strict-mode resident-memory guard (reject writes, stay alive) together with\n  on-disk payload, so the service degrades rather than being killed when memory runs low.\n- gRPC exposed on a Cloudron TCP port for high-throughput clients such as rig-qdrant.\n- All state under /app/data, covered by Cloudron backup. An optional in-container snapshot cron\n  (off by default) writes an extra consistent artifact into the backup.\n",
+        "icon": "file://logo.png",
+        "version": "1.0.0",
+        "upstreamVersion": "1.18.2",
+        "healthCheckPath": "/healthz",
+        "httpPort": 6333,
+        "tcpPorts": {
+          "QDRANT_GRPC_PORT": {
+            "title": "Qdrant gRPC API",
+            "description": "Qdrant gRPC endpoint (container port 6334), used by high-throughput clients such as rig-qdrant. It is authenticated by the same API key as REST. Traffic on this raw TCP port is not TLS-terminated by Cloudron (see the README security section). A Cloudflare-proxied domain cannot forward a raw TCP port; use a DNS-only (grey-cloud) record for the host that serves it.",
+            "containerPort": 6334,
+            "defaultValue": 6334,
+            "portCount": 1
+          }
+        },
+        "addons": {
+          "localstorage": {},
+          "proxyAuth": {
+            "path": "/dashboard",
+            "supportsBearerAuth": true
+          },
+          "scheduler": {
+            "snapshot": {
+              "schedule": "0 3 * * *",
+              "command": "/app/code/snapshot.sh"
+            }
+          }
+        },
+        "memoryLimit": 2147483648,
+        "configurePath": "/dashboard",
+        "optionalSso": true,
+        "postInstallMessage": "# Qdrant is installed\n\n## Get your API key\n\nQdrant requires an API key on every request. This package generated one admin key and one\nread-only key on first start. To see them, open a Terminal for this app in the Cloudron\ndashboard (or run `cloudron exec`) and read the keys file:\n\n    cat /app/data/.secrets/keys.env\n\nKeep the admin key secret: it grants full read and write access. The read-only key grants read\naccess only. Either can be sent as an `api-key` header or as an `Authorization: Bearer` token.\n\n## Dashboard\n\n<sso>\nOpen $CLOUDRON-APP-ORIGIN/dashboard and sign in with your Cloudron account. The dashboard is on\nyour primary domain behind Cloudron login, so only your Cloudron users can reach it. After\nsigning in, paste the admin key into the dashboard's API key field to manage collections.\n</sso>\n<nosso>\nOpen $CLOUDRON-APP-ORIGIN/dashboard. Single sign-on is not enabled for this install, so the\ndashboard is reachable directly. Paste the admin key into the dashboard's API key field to manage\ncollections.\n</nosso>\n\n## Connecting clients (REST and gRPC)\n\nThe data plane is not behind Cloudron login, because automated clients cannot complete an\ninteractive sign-in. It is protected by the API key instead.\n\n- REST, on your app domain:\n\n      curl $CLOUDRON-APP-ORIGIN/collections -H \"api-key: <admin-key>\"\n\n- gRPC, on the host and port shown for this app's \"Qdrant gRPC API\" port (under the app's\n  Location settings). This is what the Rust `rig-qdrant` client uses. The gRPC port is plain TCP\n  and is not TLS-terminated by Cloudron; see the README security section.\n\n## Scoped tokens (JWT)\n\nJWT and role-based access control are enabled. From the dashboard \"Access Tokens\" panel you can\nmint read-only or per-collection tokens, signed by the admin key, to hand to integrators.\nRotating the admin key revokes every issued token.\n\n## Memory and large collections\n\nThe default memory limit is 2 GB. Qdrant is configured to reject writes, while staying alive and\nserving reads, when it approaches the limit, rather than being killed into a restart loop. For\nlarger collections, raise the memory limit in the app's Resources settings, store vectors on\ndisk, or use TurboQuant quantization. See the README and docs/INTEGRATIONS.md.\n",
+        "checklist": {
+          "apikey": {
+            "message": "Retrieve your admin API key: open a Terminal for this app (or `cloudron exec`) and run `cat /app/data/.secrets/keys.env`. You will paste the admin key into the dashboard and use it for client connections. A separate read-only key is in the same file."
+          },
+          "dashboard": {
+            "message": "Open the dashboard at `/dashboard`, sign in with your Cloudron account, then paste the admin API key into the dashboard's API key field.",
+            "sso": true
+          }
+        },
+        "tags": [
+          "database",
+          "search",
+          "ai"
+        ],
+        "mediaLinks": [
+          "https://raw.githubusercontent.com/OrcVole/qdrant-cloudron/main/screenshots/dashboard.png"
+        ],
+        "website": "https://github.com/OrcVole/qdrant-cloudron",
+        "documentationUrl": "https://github.com/OrcVole/qdrant-cloudron",
+        "contactEmail": "OrcVole@users.noreply.github.com",
+        "iconUrl": "https://raw.githubusercontent.com/OrcVole/qdrant-cloudron/main/logo.png",
+        "packagerName": "OrcVole",
+        "packagerUrl": "https://github.com/OrcVole/qdrant-cloudron",
+        "manifestVersion": 2,
+        "minBoxVersion": "8.3.0",
+        "dockerImage": "ghcr.io/orcvole/qdrant-cloudron@sha256:0d136e2d037cef84b124e7d27c4e0e85d0a4bcf5edae7275261a3ce5d905dc51"
+      },
+      "creationDate": "Thu, 25 Jun 2026 14:46:06 GMT",
+      "ts": "Thu, 25 Jun 2026 14:46:06 GMT",
+      "publishState": "published"
+    }
+  }
+}
