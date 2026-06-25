@@ -1,0 +1,54 @@
+# Qdrant operator configuration (Cloudron package).
+#
+# This file is seeded into /app/data/config/production.yaml on first run and is yours to edit.
+# It is layered on top of Qdrant's built-in defaults. The package then forces a few
+# infrastructure values (storage paths, API keys, host, ports) through environment variables,
+# which override anything here, so editing those keys has no effect. Restart the app after
+# editing.
+#
+# The security and memory defaults below are chosen for a shared, memory-limited Cloudron host.
+
+log_level: INFO
+
+storage:
+  # Keep point payloads on disk to save RAM. Payload fields that are indexed and used in
+  # filters still stay in RAM. Default upstream is already true; set explicitly for clarity.
+  on_disk_payload: true
+
+  collection:
+    # Default strict-mode guard applied to NEWLY created collections. This makes Qdrant reject
+    # writes while staying alive (still serving reads and deletes) when resident heap memory
+    # approaches the container limit, instead of being OOM-killed into a restart loop.
+    #
+    # Note: max_resident_memory_percent counts the jemalloc heap, not memory-mapped page cache.
+    # For large collections, also move data off-heap (on_disk_payload above, on-disk vectors
+    # below, or TurboQuant) so the heap guard is the backstop rather than the only line.
+    # Strict mode applies to new collections only; PATCH existing collections to match.
+    strict_mode:
+      enabled: true
+      # Reject writes when resident heap exceeds this percent of the cgroup memory limit.
+      max_resident_memory_percent: 85
+      # Reject writes when disk usage exceeds this percent of available space.
+      max_disk_usage_percent: 90
+
+    # To fit larger collections into limited RAM, set a default here for new collections, or
+    # set the equivalent per collection at create time:
+    #   vectors:
+    #     on_disk: true            # store raw vectors on disk (HNSW graph stays in RAM)
+    # and enable TurboQuant quantization at collection-create time (see docs/INTEGRATIONS.md):
+    #   quantization:
+    #     turbo: { bits: bits4, always_ram: true }
+
+service:
+  # JWT / RBAC: mint scoped, read-only or per-collection access tokens (signed by the admin API
+  # key) from the dashboard "Access Tokens" panel. This is how integrators get narrow
+  # credentials. Rotating the admin key revokes every issued token.
+  jwt_rbac: true
+
+  # Refuse recovering snapshots from arbitrary remote HTTP/HTTPS URLs. This mitigates server
+  # side request forgery from a container that can reach internal resources. Local-file and
+  # uploaded-snapshot recovery still work. Re-enable only if you understand the risk.
+  enable_snapshot_url_recovery: false
+
+# Do not send anonymous usage statistics to the Qdrant developers.
+telemetry_disabled: true
