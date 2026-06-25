@@ -15,6 +15,15 @@ data risk. Read this before changing the pin.
 - The package `version` in the manifest is our own semver and moves independently of the upstream
   version. Bump it on every published change.
 
+## Minimum box version
+
+The package declares `minBoxVersion 9.1.0`. This is the floor of the community versions-url install
+channel, not of the software. The channel requires the `iconUrl` manifest field, and `iconUrl`
+requires box 9.1.0 (a versions-url manifest without `iconUrl` fails validation), so there is no
+8.3.0-compatible versions-url manifest. The Qdrant binary and `cloudron/base:5.0.0` run on Cloudron
+8.3 and up; to install on a box below 9.1.0, build from source on the server (`cloudron install` from
+a clone of this repository), which uses the `file://logo.png` icon and does not require `iconUrl`.
+
 ## Current pin
 
 - Upstream: `v1.18.2`, `qdrant/qdrant:v1.18.2@sha256:75eab8c4ba42096724fdcfde8b4de0b5713d529dde32f285a1f86fdcb2c9e50c`.
