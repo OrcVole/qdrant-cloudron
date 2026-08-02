@@ -1,5 +1,10 @@
 # Changelog
 
+[1.0.2]
+- Bump upstream to Qdrant v1.18.3 (patch; two upstream commits, no auth or storage-format
+  changes). Add the `<upstream>` tag to DESCRIPTION.md so update notifications name the
+  upstream version, not just the package version.
+
 [1.0.1]
 - Set minBoxVersion to 9.1.0. The community versions-url install channel requires the iconUrl
   manifest field, and iconUrl requires Cloudron 9.1.0, so there is no 8.3.0-compatible

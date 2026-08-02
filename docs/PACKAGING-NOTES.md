@@ -86,3 +86,28 @@ Reviewed how the post-install note renders as Cloudron's "Admin notes" panel on 
 The community install gate (`cloudron install --versions-url`) rejected the manifest with `manifest.iconUrl requires minBoxVersion of atleast 9.1.0`. The brief's instruction to set `minBoxVersion` to match the base image (5.0.0, which shipped in Cloudron 8.3) is the wrong floor: the `iconUrl` field, which community and appstore installs use for the icon, requires `minBoxVersion: 9.1.0`. Raised it to 9.1.0, which is also what the reference package declares. The base image and the binary run fine on 8.3-era boxes, but a manifest metadata field gates the floor. This was caught only by running the real stranger install path (`--versions-url`); the on-server `cloudron install` and the local podman build never validate `iconUrl`, so they passed with 8.3.0. The on-server build path validates a looser manifest schema than the community-versions path does.
 
 Follow-up (the stranger-path gate, again): trying to lower the floor to 8.3.0 by removing `iconUrl` failed with a different error, `Invalid manifest: iconUrl is missing in manifest`. So the community versions-url channel REQUIRES `iconUrl` (present means floor at least 9.1.0; absent means validation fails), which means there is no 8.3.0-compatible versions-url manifest at all. `minBoxVersion 9.1.0` is therefore the honest, mandatory floor for the versions-url channel, not gratuitous, and it vindicates the reference package's 9.1.0. Boxes below 9.1.0 use the on-server build path (documented in the README and UPGRADING) as the low-floor fallback. The release was bumped to 1.0.1 to carry this rather than mutate the already-public 1.0.0 again.
+
+## Update round, 2026-08-02: 1.0.1 to 1.0.2 (upstream v1.18.2 to v1.18.3)
+
+First real exercise of `starter/checklists/update-round-checklist.md`. A two-commit upstream patch
+(Cargo lock/toml bumps, one resharding fix, one test), no auth or storage-format change, so gate 1
+was inherited on the evidence rather than re-signed-in. Gate 1 (linkage) passed unchanged. Gate 2
+(update survival) and gate 4 (backup-restore) both ran for real on a throwaway
+(`qdrant-update-test`, then a clone to `qdrant-restore-test`): three known points, an operator
+config edit (`max_resident_memory_percent` 85 to 70), and the admin key all survived both an update
+and a backup-then-clone cycle; a collection created after each operation correctly inherited 70.
+
+Two mechanical snags worth recording for the next update round on any package:
+- `podman pull`/`build` refuses short, unqualified upstream image names in this environment
+  ("short-name resolution enforced but cannot prompt without a TTY"). Fix: pull the fully-qualified
+  `docker.io/<image>@sha256:<digest>` once first — that populates local storage under the exact
+  reference the Dockerfile's `FROM` line uses, so the subsequent `podman build` resolves it locally
+  with no prompt.
+- `cloudron update --image <ref>` silently ignores the `--image` flag when run from a directory
+  containing `CloudronManifest.json`: it uses that file's own `dockerImage` field instead. The
+  digest must be written into `CloudronManifest.json` (`dockerImage`) before testing an update
+  against it, not only at the end during `cloudron versions add`.
+- `cloudron clone` always prompts once per manifest `tcpPorts`/`udpPorts` entry via `readline`,
+  which needs a real TTY (`process.stdin.setRawMode is not a function` otherwise). A Python `pty`
+  wrapper answering the port prompt works non-interactively. Also: `--backup latest` did not
+  resolve on this box; a concrete id from `cloudron backup list` was required, again.

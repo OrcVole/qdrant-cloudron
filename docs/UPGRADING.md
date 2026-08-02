@@ -26,7 +26,7 @@ a clone of this repository), which uses the `file://logo.png` icon and does not 
 
 ## Current pin
 
-- Upstream: `v1.18.2`, `qdrant/qdrant:v1.18.2@sha256:75eab8c4ba42096724fdcfde8b4de0b5713d529dde32f285a1f86fdcb2c9e50c`.
+- Upstream: `v1.18.3`, `qdrant/qdrant:v1.18.3@sha256:0bd98fa7977f1e75694779359ca4e212822e5a71334e28421182f72f209d5286`.
 - Base: `cloudron/base:5.0.0@sha256:04fd70dbd8ad6149c19de39e35718e024417c3e01dc9c6637eaf4a41ec4e596c`.
 
 ## Storage format and the one-way migration (read first)
