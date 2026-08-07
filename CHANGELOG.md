@@ -1,5 +1,18 @@
 # Changelog
 
+[1.0.3]
+* Upstream Qdrant v1.18.3 to v1.19.0. Includes a security fix for path traversal in S3-based
+  snapshots (PR #10085), which is not reachable in this package because no S3 snapshot backend is
+  configured.
+* Four upstream deprecations, two of which this package's config template still sets and which
+  continue to work: storage.on_disk_payload (superseded by payload.memory) and the per-collection
+  strict_mode.max_resident_memory_percent (superseded by a cluster-wide quota API). Recorded rather
+  than changed, so the version bump carries one variable and not three.
+* Gate 3 ran the full leg on a throwaway installed from the published feed: update over live data
+  then backup and restore from a named backup, with point count, search ordering and a canonical
+  payload checksum identical at every stage. Qdrant is Restore-only, so the restore half is
+  mandatory rather than discretionary.
+
 [1.0.2]
 - Bump upstream to Qdrant v1.18.3 (patch; two upstream commits, no auth or storage-format
   changes). Add the `<upstream>` tag to DESCRIPTION.md so update notifications name the

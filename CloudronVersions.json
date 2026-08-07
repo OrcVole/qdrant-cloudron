@@ -209,6 +209,76 @@
             "creationDate": "Sun, 02 Aug 2026 17:21:53 GMT",
             "ts": 1785691313000,
             "publishState": "published"
+        },
+        "1.0.3": {
+            "manifest": {
+                "id": "tech.qdrant.cloudronapp",
+                "title": "Qdrant",
+                "author": "OrcVole",
+                "tagline": "High-performance vector database for AI and search",
+                "description": "<upstream>1.18.3</upstream>\n\nQdrant is a high-performance, open-source vector database and similarity-search engine written\nin Rust. It stores high-dimensional vectors together with JSON payloads and serves fast\nnearest-neighbour search over REST and gRPC, which makes it a building block for\nretrieval-augmented generation, semantic search, recommendations, and other AI workloads.\n\nThis package runs Qdrant on Cloudron with a secure, two-surface topology on a single domain:\n\n- The web dashboard (served under /dashboard) is placed behind Cloudron login, so only your\n  Cloudron users can open the management UI.\n- The REST and gRPC data plane stays in front of Cloudron login and is protected by Qdrant's own\n  API key, so programmatic clients and sibling apps authenticate with a key rather than being\n  redirected to an interactive sign-in page.\n\nQdrant is insecure by default: its API is open to anyone who can reach it. This package closes\nthat gap. It generates a strong admin key and a separate read-only key on first start, enables\nJWT and role-based access control so you can mint scoped tokens, disables telemetry, refuses\nsnapshot recovery from arbitrary URLs, and configures Qdrant to reject writes rather than be\nkilled when it approaches its memory limit.\n\nAll persistent state lives under the application data directory, so Cloudron's backup covers it.\n\nThis is a community package. It tracks upstream Qdrant releases and keeps the upstream binary\nunmodified. Qdrant and the Qdrant name and logo are trademarks of their respective owner. This\npackage is community-maintained and is not affiliated with or endorsed by the Qdrant project.\n",
+                "changelog": "* Upstream Qdrant v1.18.3 to v1.19.0. Includes a security fix for path traversal in S3-based\n  snapshots (PR #10085), which is not reachable in this package because no S3 snapshot backend is\n  configured.\n* Four upstream deprecations, two of which this package's config template still sets and which\n  continue to work: storage.on_disk_payload (superseded by payload.memory) and the per-collection\n  strict_mode.max_resident_memory_percent (superseded by a cluster-wide quota API). Recorded rather\n  than changed, so the version bump carries one variable and not three.\n* Gate 3 ran the full leg on a throwaway installed from the published feed: update over live data\n  then backup and restore from a named backup, with point count, search ordering and a canonical\n  payload checksum identical at every stage. Qdrant is Restore-only, so the restore half is\n  mandatory rather than discretionary.\n# Changelog\n",
+                "icon": "file://logo.png",
+                "version": "1.0.3",
+                "upstreamVersion": "v1.19.0",
+                "healthCheckPath": "/healthz",
+                "httpPort": 6333,
+                "tcpPorts": {
+                    "QDRANT_GRPC_PORT": {
+                        "title": "Qdrant gRPC API",
+                        "description": "Qdrant gRPC endpoint (container port 6334), used by high-throughput clients such as rig-qdrant. It is authenticated by the same API key as REST. Traffic on this raw TCP port is not TLS-terminated by Cloudron (see the README security section). A Cloudflare-proxied domain cannot forward a raw TCP port; use a DNS-only (grey-cloud) record for the host that serves it.",
+                        "containerPort": 6334,
+                        "defaultValue": 6334,
+                        "portCount": 1
+                    }
+                },
+                "addons": {
+                    "localstorage": {},
+                    "proxyAuth": {
+                        "path": "/dashboard",
+                        "supportsBearerAuth": true
+                    },
+                    "scheduler": {
+                        "snapshot": {
+                            "schedule": "0 3 * * *",
+                            "command": "/app/code/snapshot.sh"
+                        }
+                    }
+                },
+                "memoryLimit": 2147483648,
+                "configurePath": "/dashboard",
+                "optionalSso": true,
+                "postInstallMessage": "### Qdrant is running and ready\n\nNo setup wizard. Get your API key below, then point your apps or your code at Qdrant whenever you\nwant. The dashboard is optional.\n\n**Get your API key.** Open this app's Terminal (the `>_` button above) and run\n`cat /app/data/.secrets/keys.env`. It prints `QDRANT_ADMIN_API_KEY` (full access — use only for\nwriting/creating) and `QDRANT_READONLY_API_KEY` (read only — prefer this for most connections).\n\n**Open the dashboard (optional).** Go to $CLOUDRON-APP-ORIGIN/dashboard, sign in with your Cloudron\naccount, and paste the admin key into the API-key field.\n\n**Connect another Cloudron app** (n8n, OpenWebUI, AnythingLLM): in that app's own settings, set its\nQdrant URL to $CLOUDRON-APP-ORIGIN and paste a key. See `docs/INTEGRATIONS.md` for per-app recipes.\n\n**Connect your own code:** REST at $CLOUDRON-APP-ORIGIN, or gRPC at the host and port under this\napp's Location settings (for Rust `rig-qdrant`; plain TCP, see the README security section).\n\n**Test from your own computer:** `curl $CLOUDRON-APP-ORIGIN/collections -H \"api-key: PASTE-READONLY-KEY-HERE\"`.\nUse the read-only key for anything that only reads; use the admin key only for apps that create\ncollections or write points.\n\n**Good to know.** JWT and RBAC are on — mint scoped tokens in the dashboard's Access Tokens panel\n(rotating the admin key revokes them all). The memory limit is 2 GB; Qdrant rejects writes near the\nlimit rather than being killed. Full topology, security, and integration recipes are in the README\nand `docs/INTEGRATIONS.md`.\n",
+                "checklist": {
+                    "apikey": {
+                        "message": "Get your admin API key: open a Terminal for this app (the `>_` button) and run `cat /app/data/.secrets/keys.env`. Paste the admin key into the dashboard and use it for clients; a read-only key is in the same file."
+                    },
+                    "dashboard": {
+                        "message": "Open the dashboard at `/dashboard`, sign in with Cloudron, and paste the admin key into the dashboard's API key field.",
+                        "sso": true
+                    }
+                },
+                "tags": [
+                    "database",
+                    "search",
+                    "ai"
+                ],
+                "mediaLinks": [
+                    "https://raw.githubusercontent.com/OrcVole/qdrant-cloudron/main/screenshots/dashboard.png"
+                ],
+                "website": "https://github.com/OrcVole/qdrant-cloudron",
+                "documentationUrl": "https://github.com/OrcVole/qdrant-cloudron",
+                "contactEmail": "OrcVole@users.noreply.github.com",
+                "packagerName": "OrcVole",
+                "packagerUrl": "https://github.com/OrcVole/qdrant-cloudron",
+                "manifestVersion": 2,
+                "minBoxVersion": "9.1.0",
+                "dockerImage": "ghcr.io/orcvole/qdrant-cloudron@sha256:31e7071037a72c1c03f4113436893ab8ce6b143e7f08e7f53e73214934822289",
+                "iconUrl": "https://raw.githubusercontent.com/OrcVole/qdrant-cloudron/main/logo.png"
+            },
+            "creationDate": "Fri, 07 Aug 2026 14:09:43 GMT",
+            "ts": 1786111783000,
+            "publishState": "published"
         }
     }
 }
