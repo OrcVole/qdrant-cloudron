@@ -74,12 +74,14 @@ The admin key is `QDRANT_ADMIN_API_KEY`; the read-only key is `QDRANT_READONLY_A
 Format: Symptom / Cause / Fix.
 
 ### Install fails: manifest validation rejects `/addons`
+
 - **Symptom:** `cloudron install` rejects the manifest, pointing at `/addons`, before any build.
 - **Cause:** the proxy-authentication addon key must be camelCase `proxyAuth`. The Cloudron
   packaging skill's addon reference lists it lowercase, which the box rejects.
 - **Fix:** `"addons": { "proxyAuth": { "path": "/dashboard", "supportsBearerAuth": true } }`.
 
 ### Boot log: `Failed to create init file indicator: .qdrant-initialized: Permission denied`
+
 - **Symptom:** a WARN at boot about not being able to write `.qdrant-initialized`.
 - **Cause:** Qdrant writes a marker into its working directory, which would be the read-only
   `/app/code`.
@@ -87,12 +89,14 @@ Format: Symptom / Cause / Fix.
   `config` symlinked in. If this WARN returns, confirm the working-directory setup in `start.sh`.
 
 ### Boot log: `Config file not found: config/development`
+
 - **Symptom:** a WARN about a missing `config/development` file.
 - **Cause:** Qdrant's default run mode is `development`, so it looks for `config/development.yaml`.
 - **Fix:** already handled. `start.sh` sets `RUN_MODE=production` and links the operator config as
   `config/production.yaml` in the working directory.
 
 ### App is OOM-killed or restarts under load
+
 - **Symptom:** the app restarts when a collection grows, or the container is killed.
 - **Cause:** the memory limit is too low for the working set. Qdrant keeps the HNSW graph and
   unquantized vectors in RAM unless told otherwise, and the strict-mode guard counts only the heap.
@@ -102,12 +106,14 @@ Format: Symptom / Cause / Fix.
   rather than the process being killed. Strict mode applies to new collections; PATCH existing ones.
 
 ### `GET /metrics` returns 401
+
 - **Symptom:** a Prometheus scrape of `/metrics` returns 401.
 - **Cause:** `/metrics` is protected by the API key (it is not in Qdrant's open whitelist, which is
   only `/`, `/healthz`, `/livez`, `/readyz`).
 - **Fix:** send the API key on the scrape, or a read-only key.
 
 ### gRPC client cannot connect on the data-plane port
+
 - **Symptom:** a gRPC client times out or is refused on the TCP port.
 - **Likely causes:** the domain is Cloudflare-proxied (the orange cloud proxies only HTTP, so the
   raw TCP port does not pass), or the wrong host or port is used.
@@ -116,6 +122,7 @@ Format: Symptom / Cause / Fix.
   with grpcurl.
 
 ### io_uring and seccomp
+
 - Qdrant can use io_uring for the async scorer (quantized multi-vector rescoring). The package
   leaves it off (`storage.performance.async_scorer` defaults to false), because Docker's default
   seccomp profile commonly restricts io_uring syscalls and there is no confirmed graceful fallback.

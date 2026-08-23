@@ -1,24 +1,27 @@
 # Changelog
 
 [1.0.3]
-* Upstream Qdrant v1.18.3 to v1.19.0. Includes a security fix for path traversal in S3-based
+
+- Upstream Qdrant v1.18.3 to v1.19.0. Includes a security fix for path traversal in S3-based
   snapshots (PR #10085), which is not reachable in this package because no S3 snapshot backend is
   configured.
-* Four upstream deprecations, two of which this package's config template still sets and which
+- Four upstream deprecations, two of which this package's config template still sets and which
   continue to work: storage.on_disk_payload (superseded by payload.memory) and the per-collection
   strict_mode.max_resident_memory_percent (superseded by a cluster-wide quota API). Recorded rather
   than changed, so the version bump carries one variable and not three.
-* Gate 3 ran the full leg on a throwaway installed from the published feed: update over live data
+- Gate 3 ran the full leg on a throwaway installed from the published feed: update over live data
   then backup and restore from a named backup, with point count, search ordering and a canonical
   payload checksum identical at every stage. Qdrant is Restore-only, so the restore half is
   mandatory rather than discretionary.
 
 [1.0.2]
+
 - Bump upstream to Qdrant v1.18.3 (patch; two upstream commits, no auth or storage-format
   changes). Add the `<upstream>` tag to DESCRIPTION.md so update notifications name the
   upstream version, not just the package version.
 
 [1.0.1]
+
 - Set minBoxVersion to 9.1.0. The community versions-url install channel requires the iconUrl
   manifest field, and iconUrl requires Cloudron 9.1.0, so there is no 8.3.0-compatible
   versions-url manifest. Boxes below 9.1.0 can still install by building on the server (README).
@@ -26,6 +29,7 @@
   no blockquote cards or callouts) and default the examples to the read-only key.
 
 [1.0.0]
+
 - Initial release. Packages Qdrant v1.18.2 on cloudron/base:5.0.0.
 - Two-surface topology on a single domain: the dashboard (/dashboard) behind the Cloudron
   proxyAuth addon, the REST and gRPC data plane in front of it and protected by Qdrant's API key.

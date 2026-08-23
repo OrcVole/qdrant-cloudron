@@ -98,6 +98,7 @@ config edit (`max_resident_memory_percent` 85 to 70), and the admin key all surv
 and a backup-then-clone cycle; a collection created after each operation correctly inherited 70.
 
 Two mechanical snags worth recording for the next update round on any package:
+
 - `podman pull`/`build` refuses short, unqualified upstream image names in this environment
   ("short-name resolution enforced but cannot prompt without a TTY"). Fix: pull the fully-qualified
   `docker.io/<image>@sha256:<digest>` once first — that populates local storage under the exact

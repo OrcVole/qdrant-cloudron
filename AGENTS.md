@@ -7,7 +7,7 @@ relitigate them and do not regress conformance.
 If you are an AI agent: treat the rules in "Golden rules" as hard constraints. When a request
 conflicts with them, stop and surface the conflict rather than working around it.
 
-This repository packages **Qdrant** (https://github.com/qdrant/qdrant, Apache-2.0, a vector
+This repository packages **Qdrant** (<https://github.com/qdrant/qdrant>, Apache-2.0, a vector
 database written in Rust) as a **Cloudron-conformant application**. The goals, in order: (1) it
 runs cleanly and securely on Cloudron, (2) the repository is public so others can use it, and (3)
 it is written to a standard where the Cloudron team could adopt it as an official application.

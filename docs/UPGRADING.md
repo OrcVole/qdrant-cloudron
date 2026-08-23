@@ -85,7 +85,7 @@ stays unproven until a real version change is tested.
 ## Standard bump steps
 
 1. Confirm the new stable tag exists on the upstream releases page
-   (https://github.com/qdrant/qdrant/releases) and the image is published. Resolve its digest with
+   (<https://github.com/qdrant/qdrant/releases>) and the image is published. Resolve its digest with
    `skopeo inspect --format '{{.Digest}}' docker://qdrant/qdrant:<tag>`.
 2. Change the version in the canonical places:
    - `Dockerfile`: `ARG QDRANT_VERSION=v<new>` and the pinned `@sha256:` digest on the upstream

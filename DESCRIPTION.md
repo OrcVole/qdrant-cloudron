@@ -1,4 +1,4 @@
-<upstream>1.18.3</upstream>
+`<upstream>`1.18.3</upstream>
 
 Qdrant is a high-performance, open-source vector database and similarity-search engine written
 in Rust. It stores high-dimensional vectors together with JSON payloads and serves fast
