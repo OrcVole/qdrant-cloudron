@@ -1,5 +1,10 @@
 # Changelog
 
+[1.0.4]
+
+- Upstream Qdrant v1.19.0 to 1.19.1. Patch update with performance improvements and bug fixes. No data format changes, migrations, or schema updates required.
+- New optional config settings (all commented out by default): wal_retain_closed and three HTTP timeout options (http_keep_alive_timeout_sec, http_client_request_timeout_sec, http_client_disconnect_timeout_sec).
+
 [1.0.3]
 
 - Upstream Qdrant v1.18.3 to v1.19.0. Includes a security fix for path traversal in S3-based
