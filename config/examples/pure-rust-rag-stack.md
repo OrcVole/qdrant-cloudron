@@ -4,7 +4,7 @@ A self-hostable retrieval-augmented-generation stack where every component is Ru
 this Qdrant package as the vector store. Each link is independent, so you can adopt as much as you
 want.
 
-```
+```text
 PDF or text  --parse-->  text chunks  --embed-->  vectors  --store-->  Qdrant (this package)
                                                                           |
    agent query  --embed-->  query vector  --search-->  top-k chunks  -----+

@@ -36,7 +36,7 @@ there). It is not persistent, by design. The rest of the filesystem is read-only
 
 To see the package startup sequence:
 
-```
+```bash
 cloudron logs -f --app <app> | grep '==>'
 ```
 
@@ -63,7 +63,7 @@ A change is not done until this passes on the target Cloudron.
 
 ## Getting the API key
 
-```
+```bash
 cloudron exec --app <app> -- cat /app/data/.secrets/keys.env
 ```
 
@@ -134,7 +134,7 @@ Format: Symptom / Cause / Fix.
 A debug install gives a writable root filesystem, which is the fastest way to find what the app
 tried to write outside the allowed paths:
 
-```
+```bash
 cloudron install --debug --location qdrant.example.com
 cloudron exec --app qdrant.example.com
 #   inside: find / -mmin -30 -not -path '/proc/*' -not -path '/sys/*'

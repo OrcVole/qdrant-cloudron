@@ -13,12 +13,14 @@ at boot.
 
 Ship, in the operator config, strict mode enabled with a resident-memory ceiling:
 
-    storage:
-      collection:
-        strict_mode:
-          enabled: true
-          max_resident_memory_percent: 85
-          max_disk_usage_percent: 90
+```yaml
+storage:
+  collection:
+    strict_mode:
+      enabled: true
+      max_resident_memory_percent: 85
+      max_disk_usage_percent: 90
+```
 
 `max_resident_memory_percent` is a percent of the container's cgroup memory limit, which Cloudron
 sets from `memoryLimit`. When resident heap memory crosses the ceiling, Qdrant rejects writes

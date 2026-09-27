@@ -36,7 +36,7 @@ After install, with `<domain>` the app domain you chose:
 
 REST, with the key as a header or a bearer token:
 
-```
+```bash
 curl https://<domain>/collections -H "api-key: <admin-key>"
 curl https://<domain>/collections -H "Authorization: Bearer <admin-key>"
 ```
@@ -49,7 +49,7 @@ Qdrant is insecure by default: its API is open. This package closes that. On fir
 generates a strong admin key and a separate read-only key, stored at
 `/app/data/.secrets/keys.env`. To read them, open a Terminal for the app (or `cloudron exec`) and:
 
-```
+```bash
 cat /app/data/.secrets/keys.env
 ```
 
@@ -138,7 +138,7 @@ companion.
 This package is published as a public image and a Cloudron community versions file. To install,
 point the Cloudron CLI at the versions URL and choose a domain:
 
-```
+```bash
 cloudron install \
   --versions-url https://raw.githubusercontent.com/OrcVole/qdrant-cloudron/main/CloudronVersions.json \
   --location qdrant.example.com
@@ -158,7 +158,7 @@ from the `file://logo.png`.
 To build the image yourself instead of pulling the published one, clone this repository and run
 the Cloudron build flow (it builds on the server, so no local Docker is needed), then install:
 
-```
+```bash
 cloudron install --location qdrant.example.com
 ```
 

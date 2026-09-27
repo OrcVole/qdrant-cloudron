@@ -49,7 +49,7 @@ it is written to a standard where the Cloudron team could adopt it as an officia
 
 ## 3. Repository layout
 
-```
+```text
 .
 ├── AGENTS.md                  # this file: the contract
 ├── CONTRIBUTING.md            # dev workflow and the path to official inclusion

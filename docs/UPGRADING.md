@@ -57,7 +57,7 @@ The qdrant binary is dynamically linked against glibc. A future upstream build o
 could require a glibc newer than the base provides, and that fails at runtime, not at build time.
 The Dockerfile runs the linkage check as a build step, so a bad pin fails the build:
 
-```
+```text
 ldd /app/code/qdrant     # every line must resolve, no "not found"
 /app/code/qdrant --version
 ```

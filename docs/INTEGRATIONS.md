@@ -38,7 +38,7 @@ and reference it there, rather than pasting it into a config file a UI might rew
 The reason this package exists is to be the vector store for a self-hostable, Python-free retrieval
 stack where every component is Rust on tokio:
 
-```
+```text
 Ingest:      lopdf / the `pdf` crate to parse, pdf-extract or pdf_oxide for robust text extraction
 Embed:       text-embeddings-inference (TEI) or fastembed-rs  (Candle / ONNX, Rust)
 Store:       THIS Qdrant package, via rig-qdrant over gRPC + api_key

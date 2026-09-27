@@ -20,7 +20,9 @@ client cannot satisfy, breaking every integration.
 
 Scope the proxyAuth addon to the dashboard path only:
 
-    "addons": { "proxyAuth": { "path": "/dashboard", "supportsBearerAuth": true } }
+```text
+"addons": { "proxyAuth": { "path": "/dashboard", "supportsBearerAuth": true } }
+```
 
 This places Cloudron single sign-on in front of /dashboard (and its assets, which all load under
 /dashboard/), and leaves every other path open at the network level: the REST API, /metrics, the

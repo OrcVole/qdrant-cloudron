@@ -40,7 +40,7 @@ The qdrant binary is dynamically linked. A future upstream build on a newer tool
 glibc newer than the base provides, and that fails at runtime, not at build time. The Dockerfile
 runs the gate as a build step, so build and confirm:
 
-```
+```bash
 podman build -t ghcr.io/orcvole/qdrant-cloudron:<ver> -f Dockerfile .
 podman run --rm ghcr.io/orcvole/qdrant-cloudron:<ver> ldd /app/code/qdrant
 podman run --rm ghcr.io/orcvole/qdrant-cloudron:<ver> /app/code/qdrant --version
@@ -58,7 +58,7 @@ fresh app). For a real minor jump, also confirm the storage migration (docs/UPGR
 
 ### 4. Push the image
 
-```
+```bash
 printf '%s' "$TOKEN" | podman login ghcr.io -u OrcVole --password-stdin
 podman push ghcr.io/orcvole/qdrant-cloudron:<ver>
 ```
@@ -68,7 +68,7 @@ podman push ghcr.io/orcvole/qdrant-cloudron:<ver>
 A local podman build reports a different manifest digest than the registry stores, so always read
 the registry:
 
-```
+```text
 skopeo inspect --format '{{.Digest}}' docker://ghcr.io/orcvole/qdrant-cloudron:<ver>
 ```
 
@@ -92,7 +92,7 @@ package stays public.
 
 Prove a stranger can pull the published image with no credentials, before pushing the repository:
 
-```
+```bash
 podman rmi -f ghcr.io/orcvole/qdrant-cloudron@sha256:<digest>
 podman logout ghcr.io
 printf '{"auths":{}}' > /tmp/empty.json

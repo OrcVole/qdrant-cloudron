@@ -7,7 +7,7 @@ it is the contract and it encodes the settled decisions.
 
 1. Build the image locally (the Docker daemon is optional; rootless podman works):
 
-   ```
+   ```bash
    podman build -t qdrant-cloudron:test -f Dockerfile .
    podman run -d --name q -v qdata:/app/data -p 127.0.0.1:6333:6333 qdrant-cloudron:test
    ```
@@ -17,7 +17,7 @@ it is the contract and it encodes the settled decisions.
 
 2. Install or update on a throwaway Cloudron app (on-server build, no local Docker needed):
 
-   ```
+   ```bash
    cloudron install --location qdrant-test.example.com -p QDRANT_GRPC_PORT=6334
    cloudron update  --app qdrant-test.example.com
    ```
