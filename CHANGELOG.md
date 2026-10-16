@@ -1,5 +1,14 @@
 # Changelog
 
+[1.0.5]
+
+- Base image cloudron/base 5.0.0 to 6.0.0 (Ubuntu 26.04, glibc 2.43). Qdrant is a single binary, so
+  the move needs no runtime change beyond the snapshot task below.
+- Upstream Qdrant v1.19.1 to v1.19.2. Patch release.
+- Fix: the opt-in snapshot task now honours `QDRANT_SNAPSHOT_RETAIN`. It always kept 2 before,
+  because the retain count was read from an environment variable that was never exported. The
+  snapshot list is now parsed with jq, since base 6 ships no Node.
+
 [1.0.4]
 
 - Upstream Qdrant v1.19.0 to 1.19.1. Patch update with performance improvements and bug fixes. No data format changes, migrations, or schema updates required.

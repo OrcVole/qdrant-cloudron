@@ -5,23 +5,23 @@
 # See docs/UPGRADING.md before changing it (the storage-format and linkage gates apply).
 #
 # Qdrant ships as a single dynamically linked binary built on Debian bookworm, which requires
-# glibc >= 2.36. cloudron/base:5.0.0 provides glibc 2.39, which satisfies it. The match is
+# glibc >= 2.36. cloudron/base:6.0.0 provides glibc 2.43, which satisfies it. The match is
 # looser than a Chainguard build, but every version bump must still re-run the linkage gate
 # (docs/RELEASING.md), because a future Qdrant build could raise the glibc floor and would
 # then fail at runtime on this base, not at build time.
 
-ARG QDRANT_VERSION=v1.19.1
+ARG QDRANT_VERSION=v1.19.2
 
 # --- Stage 1: the official upstream image, used only as a source for the binary and assets --
-# Pinned by digest (resolved 2026-09-14). Tag v1.19.1 resolves to this digest.
-FROM qdrant/qdrant:v1.19.1@sha256:12364fe851b9f17356fc88189fc06d1b521262e04659ec7345975b00c9246a10 AS upstream
+# Pinned by digest (resolved 2026-10-16). Tag v1.19.2 resolves to this digest.
+FROM docker.io/qdrant/qdrant:v1.19.2@sha256:b7b0444c4c351c970b98e90a6f89c2ee4287c65b44e52b4cb503fa5b2aa927ad AS upstream
 
 # --- Stage 2: the Cloudron app image -------------------------------------------------------
 # The final stage must be this exact base so the Cloudron file manager, web terminal, and log
-# viewer work. Tag 5.0.0 resolves to this digest (Ubuntu 24.04, glibc 2.39).
-FROM cloudron/base:5.0.0@sha256:04fd70dbd8ad6149c19de39e35718e024417c3e01dc9c6637eaf4a41ec4e596c
+# viewer work. Tag 6.0.0 resolves to this digest (Ubuntu 26.04, glibc 2.43).
+FROM docker.io/cloudron/base:6.0.0@sha256:9bed4c8fa880645f8e669041ee28febe941481d00e9445e3e5a5483cb541d09b
 
-# cloudron/base:5.0.0 already provides gosu, Node.js, curl, tini, ca-certificates, coreutils,
+# cloudron/base:6.0.0 already provides gosu, jq, curl, tini, ca-certificates, coreutils,
 # and openssl. Qdrant needs no extra runtime tools: it is a single binary, and its dashboard
 # operates the database through the API rather than rewriting the server config file, so
 # unlike some packages this one needs no YAML-rewriting helper at boot.
@@ -44,7 +44,7 @@ ENV QDRANT_VERSION=${QDRANT_VERSION}
 
 # Linkage gate (Gate 1, docs/RELEASING.md): fail the BUILD if the binary cannot resolve its
 # shared libraries or its required glibc on this base, and confirm it executes. This passes on
-# base 5.0.0 (glibc 2.39); it guards against a future base downgrade or an upstream toolchain
+# base 6.0.0 (glibc 2.43); it guards against a future base downgrade or an upstream toolchain
 # bump that raises the glibc floor.
 RUN set -eux; \
     ldd /app/code/qdrant; \

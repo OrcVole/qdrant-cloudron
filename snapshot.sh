@@ -35,15 +35,12 @@ curl -fsS -X POST "${BASE}/snapshots" \
   -H "api-key: ${QDRANT_ADMIN_API_KEY}" \
   -H 'content-type: application/json' >/dev/null
 
-# Prune to the newest ${RETAIN} full snapshots. Parse the snapshot list with Node (provided by
-# the base image) to avoid adding a JSON tool to the runtime.
+# Prune to the newest ${RETAIN} full snapshots. Parse the snapshot list with jq (provided by
+# base 6, which has no Node). RETAIN is passed explicitly: the earlier Node parser read it from an
+# environment variable that was never exported, so it always kept 2.
 to_delete="$(curl -fsS "${BASE}/snapshots" -H "api-key: ${QDRANT_ADMIN_API_KEY}" \
-  | node -e '
-let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{
-  const names=(JSON.parse(s).result||[]).map(x=>x.name).sort();
-  const keep=parseInt(process.env.RETAIN||"2",10);
-  for(const n of names.slice(0,Math.max(0,names.length-keep))) console.log(n);
-});' RETAIN="${RETAIN}")"
+  | jq -r --argjson keep "${RETAIN}" \
+      '[.result[]?.name] | sort | .[0:([length - $keep, 0] | max)][]')"
 
 while IFS= read -r snap; do
   [[ -n "${snap}" ]] || continue
