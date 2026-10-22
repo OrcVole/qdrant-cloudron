@@ -5,7 +5,7 @@
 # See docs/UPGRADING.md before changing it (the storage-format and linkage gates apply).
 #
 # Qdrant ships as a single dynamically linked binary built on Debian bookworm, which requires
-# glibc >= 2.36. cloudron/base:6.0.0 provides glibc 2.43, which satisfies it. The match is
+# glibc >= 2.36. cloudron/base:6.0.1 provides glibc 2.43, which satisfies it. The match is
 # looser than a Chainguard build, but every version bump must still re-run the linkage gate
 # (docs/RELEASING.md), because a future Qdrant build could raise the glibc floor and would
 # then fail at runtime on this base, not at build time.
@@ -18,10 +18,10 @@ FROM docker.io/qdrant/qdrant:v1.19.2@sha256:b7b0444c4c351c970b98e90a6f89c2ee4287
 
 # --- Stage 2: the Cloudron app image -------------------------------------------------------
 # The final stage must be this exact base so the Cloudron file manager, web terminal, and log
-# viewer work. Tag 6.0.0 resolves to this digest (Ubuntu 26.04, glibc 2.43).
-FROM docker.io/cloudron/base:6.0.0@sha256:9bed4c8fa880645f8e669041ee28febe941481d00e9445e3e5a5483cb541d09b
+# viewer work. Tag 6.0.1 resolves to this digest (Ubuntu 26.04, glibc 2.43).
+FROM docker.io/cloudron/base:6.0.1@sha256:7b1e729960c3ca312d26e886917ba89483241bba0219ff292858e10d9d5768ee
 
-# cloudron/base:6.0.0 already provides gosu, jq, curl, tini, ca-certificates, coreutils,
+# cloudron/base:6.0.1 already provides gosu, jq, curl, tini, ca-certificates, coreutils,
 # and openssl. Qdrant needs no extra runtime tools: it is a single binary, and its dashboard
 # operates the database through the API rather than rewriting the server config file, so
 # unlike some packages this one needs no YAML-rewriting helper at boot.
@@ -44,7 +44,7 @@ ENV QDRANT_VERSION=${QDRANT_VERSION}
 
 # Linkage gate (Gate 1, docs/RELEASING.md): fail the BUILD if the binary cannot resolve its
 # shared libraries or its required glibc on this base, and confirm it executes. This passes on
-# base 6.0.0 (glibc 2.43); it guards against a future base downgrade or an upstream toolchain
+# base 6.0.1 (glibc 2.43); it guards against a future base downgrade or an upstream toolchain
 # bump that raises the glibc floor.
 RUN set -eux; \
     ldd /app/code/qdrant; \

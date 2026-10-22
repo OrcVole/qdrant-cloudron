@@ -6,7 +6,7 @@
   "description": "file://DESCRIPTION.md",
   "changelog": "file://CHANGELOG.md",
   "icon": "file://logo.png",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "upstreamVersion": "v1.19.2",
   "healthCheckPath": "/healthz",
   "httpPort": 6333,
@@ -60,6 +60,6 @@
   "packagerUrl": "https://github.com/OrcVole/qdrant-cloudron",
   "manifestVersion": 2,
   "minBoxVersion": "9.1.0",
-  "dockerImage": "ghcr.io/orcvole/qdrant-cloudron@sha256:2a0038b83dce0c6fba12b2eb038fe53757c3a2940cfef0ac837617337c428ec4",
+  "dockerImage": "ghcr.io/orcvole/qdrant-cloudron@sha256:4a2729b30adfefbd83d67c037db8916c75e3e6190050bb3dc3513e503a0f3c8c",
   "iconUrl": "https://raw.githubusercontent.com/OrcVole/qdrant-cloudron/main/logo.png"
 }

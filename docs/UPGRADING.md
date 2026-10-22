@@ -20,14 +20,14 @@ data risk. Read this before changing the pin.
 The package declares `minBoxVersion 9.1.0`. This is the floor of the community versions-url install
 channel, not of the software. The channel requires the `iconUrl` manifest field, and `iconUrl`
 requires box 9.1.0 (a versions-url manifest without `iconUrl` fails validation), so there is no
-8.3.0-compatible versions-url manifest. The Qdrant binary and `cloudron/base:6.0.0` run on Cloudron
+8.3.0-compatible versions-url manifest. The Qdrant binary and `cloudron/base:6.0.1` run on Cloudron
 8.3 and up; to install on a box below 9.1.0, build from source on the server (`cloudron install` from
 a clone of this repository), which uses the `file://logo.png` icon and does not require `iconUrl`.
 
 ## Current pin
 
 - Upstream: `v1.18.3`, `qdrant/qdrant:v1.18.3@sha256:0bd98fa7977f1e75694779359ca4e212822e5a71334e28421182f72f209d5286`.
-- Base: `cloudron/base:6.0.0@sha256:9bed4c8fa880645f8e669041ee28febe941481d00e9445e3e5a5483cb541d09b`.
+- Base: `cloudron/base:6.0.1@sha256:7b1e729960c3ca312d26e886917ba89483241bba0219ff292858e10d9d5768ee`.
 
 ## Storage format and the one-way migration (read first)
 
@@ -64,7 +64,7 @@ ldd /app/code/qdrant     # every line must resolve, no "not found"
 
 If either fails, raise the `cloudron/base` pin to a digest that provides the required glibc, re-run,
 and only then continue. At the current pin the binary needs at most glibc 2.39 and links libc, libm,
-libgcc_s, libunwind, and liblzma, all present on base 6.0.0.
+libgcc_s, libunwind, and liblzma, all present on base 6.0.1.
 
 ### Gate 2: update survival (real `cloudron update`)
 

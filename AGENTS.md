@@ -94,7 +94,7 @@ in the manifest is our own semver and moves independently.
 | Component | Pin |
 |---|---|
 | Qdrant (upstream) | `v1.18.2`, image `qdrant/qdrant:v1.18.2@sha256:75eab8c4ba42096724fdcfde8b4de0b5713d529dde32f285a1f86fdcb2c9e50c` |
-| Cloudron base | `cloudron/base:6.0.0@sha256:9bed4c8fa880645f8e669041ee28febe941481d00e9445e3e5a5483cb541d09b` (Ubuntu 26.04, glibc 2.43) |
+| Cloudron base | `cloudron/base:6.0.1@sha256:7b1e729960c3ca312d26e886917ba89483241bba0219ff292858e10d9d5768ee` (Ubuntu 26.04, glibc 2.43) |
 
 The qdrant binary requires glibc not newer than 2.39 at this pin and is dynamically linked against
 `libc`, `libm`, `libgcc_s`, `libunwind`, and `liblzma`, all present on the base. The Dockerfile runs
