@@ -10,11 +10,11 @@
 # (docs/RELEASING.md), because a future Qdrant build could raise the glibc floor and would
 # then fail at runtime on this base, not at build time.
 
-ARG QDRANT_VERSION=v1.19.2
+ARG QDRANT_VERSION=v1.20.0
 
 # --- Stage 1: the official upstream image, used only as a source for the binary and assets --
-# Pinned by digest (resolved 2026-10-16). Tag v1.19.2 resolves to this digest.
-FROM docker.io/qdrant/qdrant:v1.19.2@sha256:b7b0444c4c351c970b98e90a6f89c2ee4287c65b44e52b4cb503fa5b2aa927ad AS upstream
+# Pinned by digest (resolved 2026-10-31). Tag v1.20.0 resolves to this digest.
+FROM docker.io/qdrant/qdrant:v1.20.0@sha256:9bfc89f9914fc14876a88c05270685921a55b8877b254a98bcc1cc2f0a424cd2 AS upstream
 
 # --- Stage 2: the Cloudron app image -------------------------------------------------------
 # The final stage must be this exact base so the Cloudron file manager, web terminal, and log

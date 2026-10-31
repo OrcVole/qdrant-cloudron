@@ -1,5 +1,16 @@
 # Changelog
 
+[1.0.7]
+
+- Upstream Qdrant v1.19.2 to v1.20.0. New BM25 scoring on the full-text index, TurboQuant `turbo8` and
+  `turbo16` vector datatypes, per-element `nested` payload indexes, a `code` tokenizer, a substring filter,
+  and configurable audit log output (`audit.output`, default `file`). Log timestamps now follow `TZ`
+  (UTC by default).
+- Security fixes in the notes: vector names that escape the segment directory are rejected (PR #11275,
+  PR #11290); rustls-webpki and webpki-root-certs updated for RUSTSEC-2026-0382 and RUSTSEC-2026-0383
+  (PR #11278); internal auth is now enforced by default when an API key is configured
+  (PR #10854), which applies to distributed mode only and this package runs a single node.
+
 [1.0.6]
 
 - Base image cloudron/base 6.0.0 to 6.0.1: Ubuntu security updates, including the removal of the
